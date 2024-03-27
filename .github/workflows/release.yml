@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   release:
@@ -11,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup GitVersion
         uses: gittools/actions/gitversion/setup@v1.1.1
         with:
@@ -25,7 +29,9 @@ jobs:
         id: release-drafter
         with:
           publish: true
-          tag: ${{ steps.version_step.outputs.majorMinorPatch }}
+          tag: v${{ steps.version_step.outputs.majorMinorPatch }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
       - run: echo ${{ steps.release-drafter.outputs.id }}
+
+      #test
